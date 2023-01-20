@@ -21,7 +21,7 @@ const Space = new Schema({
         required: true,
     },
     createdBy: { 
-        type: String,
+        type: Object,
         required: true,
     },
     createdAt: { 
