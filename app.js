@@ -25,7 +25,8 @@ app.use(cors({
   },
   credentials: true,
 }));
-// app.use(expressValidator())
+
+require('dotenv').config();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -65,6 +66,20 @@ wss.on('connection', (ws) => {
     });
   });
 });
+
+
+// const accountSid = process.env.SID;
+// const authToken = process.env.TOKEN;
+// const client = require('twilio')(accountSid, authToken);
+
+// client.messages
+//   .create({
+//      body: 'Hello from Node.js',
+//      from: '+16088796962',
+//      to: '+38349970385'
+//    })
+//   .then(message => console.log(message.sid))
+//   .done();
 
 
 server.listen(8080);

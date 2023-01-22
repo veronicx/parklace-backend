@@ -28,6 +28,10 @@ const Space = new Schema({
         type: Date,
         required: true,
         default: Date.now()
+    },
+    orderPricePoints: { 
+        type: Array,
+        required: true,
     }
 })
 

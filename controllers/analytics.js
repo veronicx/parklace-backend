@@ -27,7 +27,8 @@ exports.find = async (req, res) => {
 
 exports.addView = async (req, res) => { 
     try { 
-            Analytics.updateOne({'space-id': req.body.id}, {$push: {views: req.body.view}})
+        const space = await Analytics.updateOne({ 'space-id': req.body.id }, { $push: { views: req.body.view } })
+        res.send(space)
     } catch (error) { 
         console.log('error on view')
     }
