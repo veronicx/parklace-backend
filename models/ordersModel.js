@@ -5,21 +5,22 @@ const Orders = new mongoose.Schema({
         type: String,
         required: true,
     },
-    'order-pricepoints': {
-        type: Array,
+    'order-duration': {
+        type: {
+            startAt: Date,
+            endAt: Date
+        },
         required: true,
     },
+    'order-price': {
+        type: String,
+        required: true,
+    },
+
     'special-privileges': { 
         type: Boolean,
         required: true,
     },
-    'orders-collection': { 
-        type: Array,
-        required: true,
-    }
-
-    /* /* special-privileges
-
 })
 
 module.exports = mongoose.model('orders', Orders)

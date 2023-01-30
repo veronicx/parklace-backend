@@ -22,6 +22,7 @@ exports.add =  async (req, res) => {
             premiumFeatures: req.body.premiumFeatures,
             createdBy: req.body.createdBy, 
             createdAt: req.body.createdAt || Date.now(),
+            orderPricePoints: req.body.pricePoints
         })
         const space = await newSpace.save();
         res.send(space)

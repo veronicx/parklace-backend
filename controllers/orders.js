@@ -4,9 +4,10 @@ exports.add =  async (req, res) => {
     try { 
         const order = new Orders({
             'space-id': req.body.id,
-            'order-pricepoints': req.body['order-pricepoints'],
-            'special-privileges': req.body['special-privileges'],
-            'orders-collection': req.body.orders
+            'order-duration': req.body.duration,
+            'order-price': req.body.price,
+            'special-privileges': req.body.specials
+            
         })
         await order.save()
             res.send(order)
