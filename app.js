@@ -10,14 +10,6 @@ const server = require('http').createServer(app);
 const wss = new WebSocket.Server({ server });
 
 
-const parkingSlots = {
-  slot1: { name: 'Slot 1', size: 'large', location: 'Level 1', premiumFeatures: false },
-  slot2: { name: 'Slot 2', size: 'medium', location: 'Level 2', premiumFeatures: true },
-  // Add more slots as needed
-};
-
-
-
 
 app.use(cors({
   origin: (origin, cb) => {
@@ -87,3 +79,4 @@ server.listen(8080);
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
+

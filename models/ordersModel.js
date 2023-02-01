@@ -30,7 +30,7 @@ const Orders = new mongoose.Schema({
         required: true
     },
     'order-privilege': {
-        type: Object,
+        type: String,
         required: false,
     },
     'ordered-at': { 
