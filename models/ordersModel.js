@@ -36,6 +36,11 @@ const Orders = new mongoose.Schema({
     'ordered-at': { 
         type: Date,
         required: true,
+    },
+    'ordered-entered': { 
+        type: Boolean,
+        required: false,
+        default: false
     }
 })
 

@@ -2,6 +2,8 @@ const Orders = require('../models/ordersModel')
 const Agenda = require('agenda')
 const mongoose = require('../database/mongo')
 
+const qrcode = require('qrcode')
+
 const agenda = new Agenda({mongo: mongoose.connection})
 
 agenda.define('update order completion status', async (job, done) => {
@@ -38,8 +40,11 @@ exports.schedule =  async (req, res) => {
     await order.save();
 
     await agenda.schedule(req.body['order-duration']['endAt'], 'update order completion status', { orderId: order._id })
-  
-    res.send("Order created and scheduled");
+    
+    const qrImage = await qrcode.toDataURL(`http://${req.body.org}/order/${order._id}`);
+    
+    res.setHeader('Content-Type', 'image/png');
+    res.send(Buffer.from(qrImage.split(',')[1], 'base64'));
   } catch(error) { 
     res.send(error.message)
   }
