@@ -5,6 +5,10 @@ const Orders = new mongoose.Schema({
         type: String,
         required: true
     }, 
+    'person-id': {
+        type: String,
+        required: true,
+    },
     'person-name': {
         type: String,
         required: true,
@@ -41,6 +45,9 @@ const Orders = new mongoose.Schema({
         type: Boolean,
         required: false,
         default: false
+    },
+    'qr-code': {
+        type: String
     }
 })
 

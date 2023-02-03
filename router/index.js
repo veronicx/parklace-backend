@@ -13,7 +13,7 @@ router.get('/spaces/get/:id', spaces.get)
 router.get('/spaces/one/:id', spaces.one)
 router.get('/spaces/listing', spaces.listing)
 
-// ANALYTICS
+// ANALYTICS        
 
 
 router.post('/analytics/create', analytics.create)
@@ -26,5 +26,6 @@ router.get('/space/panel/:id', panel.get)
 
 // Orders
 router.post('/order/new',  orders.schedule)
+router.get('/order/listing/:id/:limit', orders.listing)
 
 module.exports = router

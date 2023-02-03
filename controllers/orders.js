@@ -7,7 +7,7 @@ const qrcode = require('qrcode')
 const agenda = new Agenda({mongo: mongoose.connection})
 
 agenda.define('update order completion status', async (job, done) => {
-  console.log('triggered')
+  console.log('TRIGGERED')
   const order = await Orders.findById(job.attrs.data.orderId)
 
   order['order-duration'].completed = true
@@ -24,28 +24,41 @@ exports.schedule =  async (req, res) => {
     console.log('trigger')
     const order = new Orders({
       'space-id': req.body['space-id'],
+      'person-id': req.body['person-id'],
       'person-name': req.body['person-name'],
       'person-email': req.body['person-email'],
       'person-phone': req.body['person-phone'],
-      'order-duration': {
-        startAt: req.body['order-duration']['startAt'],
-        endAt: req.body['order-duration']['endAt'],
-        completed: false
-      },
+      'order-duration': req.body['order-duration'],
       'order-price': req.body['order-price'],
       'order-privilege': req.body['order-privilege'],
       'ordered-at': Date.now()
     });
-    
     await order.save();
-
     await agenda.schedule(req.body['order-duration']['endAt'], 'update order completion status', { orderId: order._id })
+
+
     
     const qrImage = await qrcode.toDataURL(`http://${req.body.org}/order/${order._id}`);
+    const base64Image = qrImage.toString('base64');
+    await Orders.findOneAndUpdate({_id: order._id}, {$set: {'qr-code': base64Image}})
+
     
-    res.setHeader('Content-Type', 'image/png');
-    res.send(Buffer.from(qrImage.split(',')[1], 'base64'));
+
+    res.send({
+      'qr-code': base64Image,
+      'order-id': order._id
+    });
   } catch(error) { 
     res.send(error.message)
   }
-};
+}
+
+exports.listing = async (req,res) => { 
+  try { 
+     const orders = await Orders.find({'space-id': req.params.id}).limit(req.params.limit)
+     res.send(orders)
+      
+  }catch(error){ 
+    console.log(error)
+  }
+}
