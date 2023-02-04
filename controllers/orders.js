@@ -62,3 +62,24 @@ exports.listing = async (req,res) => {
     console.log(error)
   }
 }
+
+exports.monthly = async(req,res) => { 
+  try { 
+    const spaceId = req.params.id
+    const now = new Date()
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
+    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0)
+  
+   const orders = await Orders.find({
+      'space-id': spaceId,
+      'ordered-duration.startAt': {
+        $gte: startOfMonth,
+        $lt: endOfMonth
+      }
+    })
+    res.send(orders)
+
+  }catch(error){ 
+    res.send(error)
+  }
+}

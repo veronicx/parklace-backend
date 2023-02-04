@@ -18,6 +18,7 @@ router.get('/spaces/listing', spaces.listing)
 
 router.post('/analytics/create', analytics.create)
 router.put('/analytics/view/add', analytics.addView)
+router.get('/analytics/:id/monthly/', analytics.monthly)
 
 
 // PANEL
@@ -27,5 +28,6 @@ router.get('/space/panel/:id', panel.get)
 // Orders
 router.post('/order/new',  orders.schedule)
 router.get('/order/listing/:id/:limit', orders.listing)
+router.get('/order/monthly/:id', orders.monthly)
 
 module.exports = router

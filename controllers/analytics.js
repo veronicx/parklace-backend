@@ -33,3 +33,22 @@ exports.addView = async (req, res) => {
         console.log('error on view')
     }
 }
+
+exports.monthly = async (req,res) => { 
+    try {
+        const now = new Date()
+        const analytics = await Analytics.find({ 'space-id': req.params.id });
+        const filteredViews = analytics.reduce((acc, current) => {
+          current.views.forEach(view => {
+            const date = new Date(view.viewed);
+            if (date.getMonth() === now.getMonth()) {
+              acc.push(view);
+            }
+          });
+          return acc;
+        }, []);
+        res.json(filteredViews);
+      } catch (err) {
+        res.status(500).json({ error: err.message });
+      }
+}
