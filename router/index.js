@@ -13,12 +13,12 @@ router.get('/spaces/get/:id', spaces.get)
 router.get('/spaces/one/:id', spaces.one)
 router.get('/spaces/listing', spaces.listing)
 
-// ANALYTICS        
+// ANALYTICS
 
 
 router.post('/analytics/create', analytics.create)
 router.put('/analytics/view/add', analytics.addView)
-router.get('/analytics/:id/monthly/', analytics.monthly)
+router.get('/analytics/:id/:type/', analytics.general)
 
 
 // PANEL
@@ -27,7 +27,6 @@ router.get('/space/panel/:id', panel.get)
 
 // Orders
 router.post('/order/new',  orders.schedule)
-router.get('/order/listing/:id/:limit', orders.listing)
-router.get('/order/monthly/:id', orders.monthly)
-
+router.get('/order/listing/:id/:type/:offset?/:limit?/:start?/:end?', orders.listing)
+router.get('/order/chart/:id/:type', orders.chart)
 module.exports = router
