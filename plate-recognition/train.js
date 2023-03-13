@@ -36,7 +36,6 @@ async function train() {
         validationData: [validImages, validLabels],
         batchSize: 32,
     });
-    console.log(history)
 
     // Evaluate the model
     const evalOutput = model.evaluate(validImages, validLabels);

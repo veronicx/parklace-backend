@@ -25,8 +25,10 @@ app.use(cors({
 }));
 
 require('dotenv').config();
-app.use(bodyParser.json());
+
+
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -67,7 +69,6 @@ app.use(routes);
 app.use(async (req,res,next) => {
     try {
         const dataset = await loadData('plate-recognition')
-        console.log('dataset', dataset)
         req.dataset = dataset
     } catch(error) {
         res.send('some errors with training model')

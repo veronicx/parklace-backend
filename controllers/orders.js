@@ -5,17 +5,15 @@ const Agenda = require('agenda')
 const mongoose = require('../database/mongo')
 
 const qrcode = require('qrcode')
-
 const agenda = new Agenda({mongo: mongoose.connection})
 
 agenda.define('update order completion status', async (job, done) => {
-  console.log('TRIGGERED')
+
   const order = await Orders.findById(job.attrs.data.orderId)
 
   order['order-duration'].completed = true
 
   await order.save()
-
   done()
 })
 
@@ -23,9 +21,9 @@ agenda.start()
 
 exports.schedule =  async (req, res) => {
   try{
-    console.log('trigger')
     const order = new Orders({
       'space-id': req.body['space-id'],
+      'space-title': req.body['space-title'],
       'person-id': req.body['person-id'],
       'person-name': req.body['person-name'],
       'person-email': req.body['person-email'],
@@ -33,18 +31,14 @@ exports.schedule =  async (req, res) => {
       'order-duration': req.body['order-duration'],
       'order-price': req.body['order-price'],
       'order-privilege': req.body['order-privilege'],
-      'ordered-at': Date.now()
+      'license-plate': req.body['license-plate'],
+      'ordered-at': Date.now(),
     });
     await order.save();
     await agenda.schedule(req.body['order-duration']['endAt'], 'update order completion status', { orderId: order._id })
-
-
-
     const qrImage = await qrcode.toDataURL(`http://${req.body.org}/order/${order._id}`);
     const base64Image = qrImage.toString('base64');
     await Orders.findOneAndUpdate({_id: order._id}, {$set: {'qr-code': base64Image}})
-
-
 
     res.send({
       'qr-code': base64Image,
@@ -54,8 +48,6 @@ exports.schedule =  async (req, res) => {
     res.send(error.message)
   }
 }
-
-
 
 exports.listing = async (req,res) => {
   try {
@@ -85,27 +77,41 @@ exports.listing = async (req,res) => {
       };
 
     } else if (type === 'custom') {
+
       const start = new Date(req.params.start);
-      const end = new Date(req.params.end)
-      console.log(start,end)
+      const end = new Date(req.params.end);
       query = {
         'space-id': spaceId,
         'order-duration.startAt': { $gte: start },
         'order-duration.endAt': { $lt: end }
       };
 
+    } else if (type === 'weekly') {
+
+      const now = new Date();
+      const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay() + 1));
+      const endOfWeek = new Date(now.setDate(now.getDate() - now.getDay() + 7));
+
+      query = {
+        'space-id': spaceId,
+        'order-duration.startAt': { $gte: startOfWeek },
+        'order-duration.endAt': { $lt: endOfWeek }
+      };
+
     }
 
-   const orders = await Orders.find(query)
+    const orders = await Orders.find(query)
         .skip(req.params.offset)
         .limit(req.params.limit)
-
     res.send(orders)
 
   }catch(error){
     console.log(error)
   }
 }
+
+
+
 
 
 exports.chart = async(req,res) => {
@@ -129,7 +135,7 @@ exports.chart = async(req,res) => {
       startDate.setDate(startDate.getDate() - startDate.getDay() + (startDate.getDay() === 0 ? -6 : 1));
       endDate = new Date();
       endDate.setDate(endDate.getDate() - endDate.getDay() + 7);
-      groupBy = { $dayOfWeek: "$order-duration.startAt" };
+      groupBy = { $week: "$order-duration.startAt" };
     } else if (type === 'custom') {
       startDate = new Date(req.params.startAt);
       endDate = new Date(req.params.endAt);
@@ -203,3 +209,22 @@ exports.chart = async(req,res) => {
     res.send(error.message)
   }
 }
+
+
+exports.userOrder = async (req, res) => {
+  try {
+    const id = req.params.id
+    const orders = await Orders.find({ 'person-id': req.params.id });
+    res.json(orders);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error fetching orders' });
+  }
+}
+
+exports.plate = async(req, res) => {
+
+}
+
+
+

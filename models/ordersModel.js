@@ -1,10 +1,14 @@
 const mongoose = require('../database/mongo')
 
-const Orders = new mongoose.Schema({ 
-    'space-id': { 
+const Orders = new mongoose.Schema({
+    'space-id': {
         type: String,
         required: true
-    }, 
+    },
+    'space-title': {
+        type: String,
+        required: true,
+    },
     'person-id': {
         type: String,
         required: true,
@@ -21,7 +25,7 @@ const Orders = new mongoose.Schema({
         type: String,
         required: true
     },
-    'order-duration': { 
+    'order-duration': {
         type: {
             startAt: Date,
             endAt: Date,
@@ -37,11 +41,15 @@ const Orders = new mongoose.Schema({
         type: String,
         required: false,
     },
-    'ordered-at': { 
+    'license-plate' : {
+        type: String,
+        required: true,
+    },
+    'ordered-at': {
         type: Date,
         required: true,
     },
-    'ordered-entered': { 
+    'ordered-entered': {
         type: Boolean,
         required: false,
         default: false

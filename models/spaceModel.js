@@ -3,12 +3,12 @@ const mongoose = require('../database/mongo')
 
 const Schema = mongoose.Schema
 
-const Space = new Schema({ 
-    title: { 
+const Space = new Schema({
+    title: {
         type: String,
         required: true,
     },
-    amount: { 
+    amount: {
         type: Number,
         required: true,
     },
@@ -16,21 +16,21 @@ const Space = new Schema({
         type: Object,
         required: true,
     },
-    premiumFeatures: { 
+    premiumFeatures: {
         type: Object,
         required: true,
     },
-    createdBy: { 
+    createdBy: {
         type: Object,
         required: true,
     },
-    createdAt: { 
+    createdAt: {
         type: Date,
         required: true,
         default: Date.now()
     },
-    orderPricePoints: { 
-        type: Array,
+    orderPricePoints: {
+        type: Object,
         required: true,
     }
 })
